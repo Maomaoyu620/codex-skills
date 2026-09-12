@@ -1,0 +1,5 @@
+interface:
+  display_name: "旅游攻略生成"
+  short_description: "生成多日旅游路书、A4 打印 PDF 与预订执行清单"
+  brand_color: "#16324A"
+  default_prompt: "用 $travel-guide 帮我做一份 <目的地> <天数> 天的旅游攻略，含逐日计划、门票住宿和预订清单。"

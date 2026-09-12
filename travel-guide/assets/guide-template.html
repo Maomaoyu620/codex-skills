@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>目的地 · N 天 N-1 晚旅游攻略</title>
+<!--
+  攻略模板：CSS 原样保留，正文全部替换成目标目的地的真实内容。
+  不要保留任何占位或说明性文字；每章的表格行数按行程规模增减。
+  禁止外链（CDN / 字体 / 图片）；地图与示意图用内联 SVG。
+-->
+<style>
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body {
+    font-family: "Microsoft YaHei", "微软雅黑", "Noto Sans SC", "PingFang SC", sans-serif;
+    font-size: 9.6pt; line-height: 1.52; color: #1d2733; margin: 0;
+  }
+  @page { size: A4; margin: 13mm 12mm 15mm 12mm; }
+  * { box-sizing: border-box; }
+  .cover { border-top: 10px solid #16324a; padding: 26px 4px 12px; }
+  .kicker { font-size: 10pt; letter-spacing: .18em; color: #c97b1f; font-weight: 700; }
+  h1 { font-size: 24pt; line-height: 1.25; margin: 10px 0 4px; color: #16324a; }
+  .subtitle { font-size: 11.5pt; color: #45566a; margin-bottom: 6px; }
+  .chain { font-size: 9.5pt; color: #0e5f55; background: #eaf4f1; border: 1px solid #b9d8cf;
+    border-radius: 6px; padding: 7px 10px; margin: 8px 0 12px; }
+  .meta-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 12px 0 16px; }
+  .meta-grid div { border: 1px solid #d3dbe4; border-left: 4px solid #2d5fb8; padding: 7px 9px; }
+  .meta-grid b { display: block; font-size: 8.5pt; color: #6b7a8c; font-weight: 600; margin-bottom: 2px; }
+  .meta-grid span { font-size: 10.5pt; font-weight: 700; color: #16324a; }
+  .chapter { page-break-before: always; }
+  h2.sec {
+    font-size: 15pt; color: #ffffff; background: #16324a;
+    padding: 7px 12px; margin: 0 0 10px; border-radius: 4px;
+  }
+  h2.sec .en { font-size: 8.5pt; opacity: .72; margin-left: 6px; font-weight: 400; }
+  h3.sub { font-size: 12pt; color: #16324a; border-bottom: 2px solid #d9a441;
+    padding-bottom: 3px; margin: 14px 0 7px; }
+  h4 { font-size: 10.5pt; margin: 10px 0 4px; color: #0e5f55; }
+  table.t { width: 100%; border-collapse: collapse; margin: 6px 0 10px; }
+  table.t th { background: #e9eef3; color: #16324a; border: 1px solid #c6cfd9;
+    padding: 4px 6px; font-size: 8.8pt; text-align: left; }
+  table.t td { border: 1px solid #d3dbe4; padding: 4px 6px; vertical-align: top; font-size: 9.2pt; }
+  table.t tr { page-break-inside: avoid; }
+  thead { display: table-header-group; }
+  td.time { white-space: nowrap; font-weight: 600; color: #16324a; width: 15%; }
+  .day { border: 1px solid #c8d2dd; border-radius: 6px; margin: 9px 0; page-break-inside: avoid; }
+  .dhead { background: #e9effa; padding: 6px 10px; border-bottom: 1px solid #c8d2dd; border-left: 8px solid #2d5fb8; }
+  .dhead .dt { font-size: 12.5pt; font-weight: 800; color: #16324a; }
+  .dhead .rt { font-size: 9pt; color: #55677c; margin-left: 8px; }
+  .dmeta { background: #f4f7fa; font-size: 8.8pt; color: #40536a; padding: 4px 10px;
+    border-bottom: 1px solid #d8e0e8; }
+  .dmeta b { color: #16324a; }
+  .note { background: #f5f8ef; border-left: 4px solid #8a9a5b; padding: 5px 9px;
+    margin: 6px 0; font-size: 9pt; }
+  .warn { background: #fdf4e7; border-left: 4px solid #c97b1f; padding: 5px 9px;
+    margin: 6px 0; font-size: 9pt; }
+  .lake { background: #ecf6f9; border-left: 4px solid #0e7490; padding: 5px 9px;
+    margin: 6px 0; font-size: 9pt; }
+  .opt { background: #f3f4f6; border-left: 4px solid #6b7280; padding: 5px 9px;
+    margin: 6px 0; font-size: 9pt; }
+  .red { color: #b3402a; font-weight: 700; }
+  .grey { color: #64748b; }
+  ul.tight { margin: 4px 0 8px; padding-left: 18px; }
+  ul.tight li { margin: 2px 0; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .card { border: 1px solid #d3dbe4; border-radius: 6px; padding: 8px 10px; }
+  .small { font-size: 8.8pt; }
+  .price { color: #a34a12; font-weight: 700; }
+  .sun { color: #b3402a; font-weight: 800; }
+  .mapwrap { border: 1px solid #c8d2dd; border-radius: 6px; padding: 8px; margin: 8px 0; }
+  .foot { margin-top: 14px; border-top: 2px solid #16324a; padding-top: 6px;
+    font-size: 8.5pt; color: #64748b; }
+</style>
+</head>
+<body>
+
+<!-- ===================== 封面 ===================== -->
+<div class="cover">
+  <div class="kicker">年份 · 主题 · 版本</div>
+  <h1>主线一 · 主线二<br>N 天 N-1 晚逐日攻略（含每日天气）</h1>
+  <div class="subtitle">人群构成 · 定位（舒适 / 经济 / 摄影）· 精度说明</div>
+  <div class="chain">起点 → 中转 → <b>过夜基地（M/D 住 N 晚）</b> → 关键景区 → … → 终点 ✈ 返程</div>
+  <div class="meta-grid">
+    <div><b>日期</b><span>M/D 抵达</span></div>
+    <div><b>返程</b><span>M/D 航班 / 车次</span></div>
+    <div><b>天数</b><span>N 天 N-1 晚</span></div>
+    <div><b>人数/车辆</b><span>…</span></div>
+    <div><b>版本</b><span>X 版 · 核心改动</span></div>
+    <div><b>行程方式</b><span>自驾 / 包车 / 公共交通</span></div>
+    <div><b>里程参考</b><span>全程约 N km</span></div>
+    <div><b>文档日期</b><span>YYYY-MM-DD</span></div>
+  </div>
+  <h3 class="sub" style="margin-top:4px">目录</h3>
+  <table class="t">
+    <tr><td>一、行程总览与路线图（含关键红线）</td><td>五、吃喝地图（按城市）</td></tr>
+    <tr><td>二、每日天气与光线速查</td><td>六、景区关键情报</td></tr>
+    <tr><td>三、预订 · 门票 · 住宿</td><td>七、弹性预案（天气 / 排队 / 降级）</td></tr>
+    <tr><td>四、逐日计划 D1–Dn（精确到时间）</td><td>八、行前清单与资料说明</td></tr>
+  </table>
+  <div class="note"><b>本版变化（相对上一版）：</b>列出结构性改动与它换来了什么，以及没改的部分。</div>
+</div>
+
+<!-- ============ 一、行程总览与路线图 ============ -->
+<div class="chapter">
+  <h2 class="sec">一、行程总览与路线图<span class="en">OVERVIEW</span></h2>
+  <div class="mapwrap">
+    <!-- 内联 SVG 路线示意图：过夜点用方块、途经点用小圆、里程标在线上 -->
+    <svg viewBox="0 0 700 180" width="100%" height="180" role="img" aria-label="路线示意图">
+      <line x1="40" y1="90" x2="660" y2="90" stroke="#9db3c8" stroke-width="2" stroke-dasharray="6 4"/>
+      <g fill="#16324a" font-size="11" font-family="sans-serif">
+        <rect x="20" y="70" width="70" height="40" rx="5" fill="#2d5fb8"/>
+        <text x="55" y="94" text-anchor="middle" fill="#fff">起点</text>
+      </g>
+      <g fill="#0e5f55" font-size="10" font-family="sans-serif">
+        <text x="350" y="72" text-anchor="middle">约 000 km · 车程 X h</text>
+      </g>
+    </svg>
+  </div>
+
+  <h3 class="sub">1.1 逐段里程与车程</h3>
+  <table class="t">
+    <tr><th style="width:14%">日期</th><th style="width:26%">路段</th><th style="width:16%">里程</th><th style="width:14%">车程</th><th>说明</th></tr>
+    <tr><td>D1</td><td>起点 → 终点</td><td class="price">约 000 km</td><td>约 X h</td><td>路况、加油点、检查站</td></tr>
+  </table>
+
+  <h3 class="sub">1.2 基地安排（住几晚 / 哪几天不动车）</h3>
+  <table class="t">
+    <tr><th style="width:22%">基地</th><th style="width:16%">住几晚</th><th>怎么用</th></tr>
+    <tr><td><b>基地 A</b></td><td>M/D–M/D</td><td>以它为原点玩哪几处、行李寄存在哪、车停哪</td></tr>
+  </table>
+
+  <h3 class="sub">1.3 关键红线（错过就麻烦）</h3>
+  <table class="t">
+    <tr><th style="width:30%">红线</th><th style="width:22%">时点</th><th>后果与补救</th></tr>
+    <tr><td>末班 / 上马 / 停止入园 / 还车</td><td class="price">HH:MM 前</td><td>错过会怎样，怎么补救</td></tr>
+  </table>
+  <div class="warn"><b>贯穿全程的几条纪律：</b>双司机轮换节奏、进山前加满油、证件随身等。</div>
+</div>
+
+<!-- ============ 二、天气与光线速查 ============ -->
+<div class="chapter">
+  <h2 class="sec">二、每日天气与光线速查<span class="en">WEATHER &amp; LIGHT</span></h2>
+  <table class="t">
+    <tr><th style="width:12%">日期</th><th style="width:26%">主力行程</th><th style="width:30%">天气要点</th><th style="width:12%">需晴</th><th>日出/日落</th></tr>
+    <tr><td>M/D</td><td>当天主线</td><td>降水概率、风力、温差</td><td><span class="sun">★★★</span></td><td>约 HH:MM / HH:MM</td></tr>
+  </table>
+  <div class="note">本表为常年同期参考，不是逐日预报；出发前 3 天起每天用官方源核对一次（复核动作写在第八 / 清单）。</div>
+</div>
+
+<!-- ============ 三、预订 · 门票 · 住宿 ============ -->
+<div class="chapter">
+  <h2 class="sec">三、预订 · 门票 · 住宿<span class="en">BOOKING</span></h2>
+  <h3 class="sub">3.1 门票与预约</h3>
+  <table class="t">
+    <tr><th style="width:22%">项目</th><th style="width:16%">价格（元/人）</th><th>关键规则</th></tr>
+    <tr><td>景区门票</td><td class="price">000</td><td>实名 / 有效期 / 是否限流预约 / 单买还是联票划算</td></tr>
+  </table>
+  <h3 class="sub">3.2 预算</h3>
+  <div class="note">分项列出交通、住宿、门票、餐饮、杂项与总计区间（给人均）。</div>
+  <h3 class="sub">3.3 住宿清单（按紧张程度排序）</h3>
+  <table class="t">
+    <tr><th style="width:16%">优先级</th><th style="width:18%">地点</th><th style="width:16%">日期</th><th>价位与选房要点</th></tr>
+    <tr><td><b>P0 先锁</b></td><td>最紧的一晚</td><td>M/D</td><td class="price">价格区间；为什么最紧、订哪一片、要确认什么</td></tr>
+  </table>
+  <div class="warn"><b>今晚就做的事：</b>① 先锁哪一晚 ② 哪两晚订同一家 ③ 办什么证 ④ 装好哪个 App 等放号。</div>
+</div>
+
+<!-- ============ 四、逐日计划 ============ -->
+<div class="chapter">
+  <h2 class="sec">四、逐日计划 D1–Dn<span class="en">DAY BY DAY</span></h2>
+  <div class="note">时间为建议值，均留 30–60 分钟弹性；"天气"一行对应第二章的需晴等级。</div>
+
+  <div class="day">
+    <div class="dhead"><span class="dt">D1 · M/D（周几）</span><span class="rt">一句话主题</span></div>
+    <div class="dmeta"><b>里程</b> 约 000 km　<b>车程</b> 约 X h　<b>天气</b> ★★ 需晴点　<b>宿</b> 城市/村寨</div>
+    <div class="bd">
+      <table class="t">
+        <thead><tr><th style="width:16%">时间</th><th>安排与细节</th></tr></thead>
+        <tr><td class="time">HH:MM–HH:MM</td><td>做什么；<span class="sun">光线窗口</span>；<span class="red">红线</span>；排队与错峰提示</td></tr>
+      </table>
+      <div class="warn"><b>今天的纪律 / 为什么这么排：</b>顺序理由、必须提前做的事、天气不好时先砍什么。</div>
+      <div class="opt"><b>另一种走法？</b>用户可能问的替代方案与代价。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 五、吃喝地图 ============ -->
+<div class="chapter">
+  <h2 class="sec">五、吃喝地图<span class="en">FOOD GUIDE</span></h2>
+  <table class="t">
+    <tr><th style="width:14%">地点</th><th style="width:40%">怎么吃（点名街区与菜品）</th><th style="width:16%">人均</th><th>点单提醒</th></tr>
+    <tr><td>落脚点</td><td>夜市名 / 招牌菜 / 特色主食</td><td class="price">00–00</td><td>营业时间、要不要提前订、在哪买补给</td></tr>
+  </table>
+  <div class="note"><b>购物与手信：</b>在哪买、能不能快递、留多少余量。</div>
+</div>
+
+<!-- ============ 六、景区关键情报 ============ -->
+<div class="chapter">
+  <h2 class="sec">六、景区关键情报<span class="en">SCENIC SPOTS</span></h2>
+  <h3 class="sub">6.1 景区名</h3>
+  <ul class="tight">
+    <li><b>怎么进：</b>入口、区间车首末班、换乘几次、在哪检票。</li>
+    <li><b>门票：</b>分项价格与组合建议。</li>
+    <li><b>最佳顺序：</b>先哪里后哪里、各用时多少、为什么不能反。</li>
+    <li><b>容易踩的坑：</b>方向坐错、末班时刻、天气影响。</li>
+  </ul>
+</div>
+
+<!-- ============ 七、弹性预案 ============ -->
+<div class="chapter">
+  <h2 class="sec">七、弹性预案<span class="en">FLEX PLANS</span></h2>
+  <h3 class="sub">7.1 优先级（累了 / 堵了 / 天气差时先砍后面）</h3>
+  <table class="t">
+    <tr><th style="width:20%">等级</th><th>内容</th></tr>
+    <tr><td><b>保底必去</b></td><td>…</td></tr>
+    <tr><td><b>可压缩</b></td><td>…</td></tr>
+    <tr><td><b>可放弃</b></td><td>…</td></tr>
+  </table>
+  <h3 class="sub">7.2 分场景天气预案</h3>
+  <table class="t">
+    <tr><th style="width:32%">场景</th><th>动作</th></tr>
+    <tr><td>某天大风 / 雨雪 / 大雾</td><td>砍什么、保什么、推迟多久、几点做决定</td></tr>
+  </table>
+  <h3 class="sub">7.3 降级包（依赖天气的整段替换方案）</h3>
+  <table class="t">
+    <tr><th style="width:14%">日期</th><th>降级后安排</th></tr>
+    <tr><td>M/D</td><td>改走哪条线、住哪、多开多少公里</td></tr>
+  </table>
+  <div class="note">代价是什么；好处是什么；<b>几号几点</b>决定启用；酒店怎么随之切换。</div>
+  <h3 class="sub">7.4 常见取舍的答案</h3>
+  <ul class="tight">
+    <li><b>"够不够 / 值不值 / 放哪天？"</b>直接给结论与理由。</li>
+  </ul>
+</div>
+
+<!-- ============ 八、行前清单与资料说明 ============ -->
+<div class="chapter">
+  <h2 class="sec">八、行前清单与资料说明<span class="en">CHECKLIST &amp; NOTES</span></h2>
+  <h3 class="sub">8.1 出发前 48 小时清单</h3>
+  <table class="t">
+    <tr><th style="width:22%">类别</th><th>项目</th></tr>
+    <tr><td>证件</td><td>身份证 / 驾照 / 通行证 / 订单与确认单</td></tr>
+    <tr><td>票务</td><td>各景区门票是否实名绑定；预约码；当日开放时间复核</td></tr>
+    <tr><td>车辆</td><td>玻璃水、胎压、备胎、离线地图、记录仪</td></tr>
+    <tr><td>衣物</td><td>按最低体感温度配（写明具体温度）</td></tr>
+    <tr><td>电子</td><td>充电宝、备用电池、存储卡</td></tr>
+    <tr><td>健康</td><td>常备药与防晒</td></tr>
+    <tr><td>其他</td><td>补给、零钱、垃圾袋</td></tr>
+  </table>
+  <h3 class="sub">8.2 资料与数据说明</h3>
+  <ul class="tight small">
+    <li>价格依据年份与来源；哪些是参考值、哪些必须当天复核。</li>
+    <li>里程与车程口径；日出日落为近似值（±10 分钟）。</li>
+    <li>节假日与错峰说明。</li>
+    <li>本攻略生成日期与版本含义；旧版保留为备选文件。</li>
+  </ul>
+  <div class="foot">攻略标题 V1.0 · X 版 · 人数构成 · 起止日期 · 一句话路线 · 祝福语。</div>
+</div>
+
+</body>
+</html>
