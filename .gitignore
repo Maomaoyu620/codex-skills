@@ -1,0 +1,20 @@
+# 个人行程数据 / 产出物：不进仓库
+北疆自驾计划2026/
+*计划20*/
+对话存档_*.md
+
+# 生成的 PDF（仓库只存源文件）
+*.pdf
+
+# 系统与编辑器
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+
+# 依赖与缓存
+node_modules/
+__pycache__/
+.venv/
+*.log
