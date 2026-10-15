@@ -1,0 +1,5 @@
+# 仅个人使用, 不希望被搜索引擎收录.
+# 注意: robots.txt 规范只认域名根目录的 /robots.txt, 本文件实际不被爬虫读取;
+# 真正的防收录是页面头部 <meta name="robots" content="noindex,...">.
+User-agent: *
+Disallow: /

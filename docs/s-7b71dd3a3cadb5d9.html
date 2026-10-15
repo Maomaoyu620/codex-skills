@@ -1,0 +1,718 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow,noarchive,nosnippet,noimageindex">
+<meta name="googlebot" content="noindex,nofollow,noarchive">
+<meta name="bingbot" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="记录">
+<meta name="format-detection" content="telephone=no">
+<title>记录</title>
+<style>
+:root{--bg:#f3f4f6;--card:#fff;--ink:#151d28;--sub:#6b7280;--line:#e5e7eb;--pri:#1f6feb;--ok:#16a34a;--warn:#d97706;--bad:#dc2626;--d0:#1f6feb;--d1:#0d9488;--d2:#d97706;--d3:#db2777}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 -apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;padding-bottom:120px}
+button,input,textarea{font:inherit;color:inherit}
+.hidden{display:none!important}
+.row{display:flex;align-items:center;gap:8px}
+.row.wrap{flex-wrap:wrap}
+.grow{flex:1;min-width:0}
+.n{font-size:12px;color:var(--sub);line-height:1.45}
+.t{font-size:17px;font-weight:700}
+.top{position:sticky;top:0;z-index:30;background:#fff;border-bottom:1px solid var(--line);padding:calc(6px + env(safe-area-inset-top)) 12px 10px}
+.seg{display:flex;background:#eef1f4;border-radius:10px;padding:3px;margin-top:8px}
+.seg button{flex:1;border:0;background:transparent;padding:10px 0;font-size:15px;border-radius:8px;color:#475569}
+.seg button.on{background:#fff;color:var(--ink);font-weight:600;box-shadow:0 1px 3px rgba(16,24,40,.14)}
+main{padding:12px}
+.card{background:var(--card);border-radius:14px;padding:12px;margin-bottom:12px;box-shadow:0 1px 2px rgba(16,24,40,.06)}
+.card>h2{font-size:14px;font-weight:700;color:#334155;margin:0 0 10px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.hint{font-weight:400;color:var(--sub);font-size:12px}
+.photo{position:relative;border:2px dashed #c9d2dd;border-radius:12px;overflow:hidden;background:#fafbfc}
+.photo .empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:28px 10px;text-align:center}
+.photo .empty .big{font-size:18px;font-weight:700;color:var(--pri)}
+.photo img{display:block;width:100%;height:auto;max-height:46vh;object-fit:contain;background:#0f172a}
+.phbtns{position:absolute;right:8px;bottom:8px;display:flex;gap:8px}
+.mini{border:1px solid var(--line);background:#fff;border-radius:9px;padding:9px 12px;font-size:13px;color:#334155}
+.mini.pri{background:#eef4ff;border-color:#bcd3ff;color:#1f4ed8;font-weight:600}
+.mini.danger{color:var(--bad);border-color:#fecaca;background:#fff5f5}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;-webkit-overflow-scrolling:touch}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 13px;font-size:13px;color:#334155;white-space:nowrap}
+.chip.on{background:#eef4ff;border-color:#bcd3ff;color:#1f4ed8;font-weight:600}
+.fld{display:block;margin-top:10px}
+.fld>span{display:block;font-size:13px;color:#475569;margin-bottom:5px}
+.fld input,.fld textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px 12px;background:#fff;font-size:16px}
+.fld input:focus,.fld textarea:focus{outline:2px solid #cfe0ff;border-color:#9dc0ff}
+.srow{border-top:1px solid #f1f3f6;padding:12px 0 6px}
+.srow:first-child{border-top:0;padding-top:0}
+.slabel{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.slabel b{font-size:15px}
+.slabel .n{flex:1 1 100%}
+.sbtns{display:flex;gap:6px}
+.sbtn{flex:1 1 0;min-width:0;height:50px;border:1px solid var(--line);background:#fff;border-radius:10px;font-size:18px;font-weight:700;color:#94a3b8;padding:0}
+.sbtn.on{color:#fff;border-color:transparent}
+.sbtn.d0.on{background:var(--d0)}
+.sbtn.d1.on{background:var(--d1)}
+.sbtn.d2.on{background:var(--d2)}
+.sbtn.d3.on{background:var(--d3)}
+.sbtn.clr{flex:0 0 46px;font-size:15px;font-weight:500}
+.sbtn.clr.on{background:#64748b}
+.note{margin-top:8px;width:100%;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:15px;background:#fbfcfd}
+.total{display:flex;align-items:center;gap:12px;margin-top:14px;padding-top:12px;border-top:1px dashed var(--line)}
+.tnum{font-size:32px;font-weight:800;color:var(--pri);line-height:1}
+.tden{font-size:14px;color:var(--sub);font-weight:600}
+.verdict{display:flex;gap:8px;flex-wrap:wrap}
+.verdict button{flex:1 1 0;min-width:74px;min-height:50px;border-radius:12px;border:1px solid var(--line);background:#fff;font-size:16px;font-weight:600;color:#334155}
+.verdict button.ok.on{background:var(--ok);border-color:var(--ok);color:#fff}
+.verdict button.warn.on{background:var(--warn);border-color:var(--warn);color:#fff}
+.verdict button.bad.on{background:var(--bad);border-color:var(--bad);color:#fff}
+.verdict button.clear{flex:0 0 auto;min-width:auto;padding:0 14px;font-size:14px;color:var(--sub)}
+.recent{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px}
+.rc{flex:0 0 auto;width:110px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff;position:relative}
+.rc img{width:100%;height:76px;object-fit:cover;display:block;background:#eef1f4}
+.rc .rcb{padding:6px 7px}
+.rc .rcb b{font-size:12px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rc .x{position:absolute;top:4px;right:4px;background:rgba(15,23,42,.62);color:#fff;border:0;border-radius:50%;width:24px;height:24px;font-size:13px;line-height:1}
+.tblwrap{overflow:auto;max-height:74vh;background:#fff;border-radius:12px;border:1px solid var(--line);-webkit-overflow-scrolling:touch}
+table{border-collapse:separate;border-spacing:0;min-width:1060px;width:100%;font-size:13px}
+th,td{border-bottom:1px solid var(--line);border-right:1px solid #f1f3f6;padding:6px 8px;text-align:left;vertical-align:top;background:#fff}
+thead th{position:sticky;top:0;z-index:5;background:#f8fafc;font-size:12px;color:#475569;white-space:nowrap}
+th.c0,td.c0{position:sticky;left:0;width:40px;text-align:center;color:var(--sub)}
+th.c0{z-index:7;background:#f8fafc}
+td.c0{z-index:3;background:#fff}
+td.cimg img{width:66px;height:66px;object-fit:cover;border-radius:8px;display:block}
+.noimg{width:66px;height:66px;border-radius:8px;background:#f1f5f9;color:#94a3b8;font-size:11px;display:flex;align-items:center;justify-content:center}
+td.sc b{font-size:17px;display:inline-block;min-width:16px}
+td.sc .nt{display:block;font-size:11px;color:var(--sub);max-width:150px}
+td.dim0 b{color:var(--d0)}td.dim1 b{color:var(--d1)}td.dim2 b{color:var(--d2)}td.dim3 b{color:var(--d3)}
+td.memo{max-width:220px;font-size:12px;color:#475569}
+td.tot{font-weight:800;color:var(--pri);font-size:16px;text-align:center}
+td.vd{text-align:center}
+td.empty{text-align:center;color:var(--sub);padding:26px}
+.tag{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
+.tag.v1{background:#e8f7ee;color:#15803d}
+.tag.v2{background:#fff5e5;color:#b45309}
+.tag.v3{background:#fdecec;color:#b91c1c}
+.savebar{position:fixed;left:0;right:0;bottom:0;z-index:40;display:flex;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.97);border-top:1px solid var(--line)}
+.savebar .save{flex:1;border:0;border-radius:12px;background:var(--pri);color:#fff;font-size:17px;font-weight:700;min-height:52px}
+.savebar .mini{min-height:52px;padding:0 14px}
+.toast{position:fixed;left:50%;bottom:calc(86px + env(safe-area-inset-bottom));transform:translate(-50%,10px);background:rgba(15,23,42,.92);color:#fff;padding:10px 16px;border-radius:999px;font-size:14px;opacity:0;pointer-events:none;transition:.2s;z-index:60;max-width:88vw;text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.stats{display:flex;flex-wrap:wrap;gap:8px}
+.st{flex:1 1 44%;border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.st b{display:block;font-size:20px;font-weight:800}
+.dime{display:flex;gap:8px;margin-bottom:8px}
+.dime input{flex:1 1 0;min-width:0;border:1px solid var(--line);border-radius:9px;padding:9px 10px;font-size:15px}
+.zenx{position:fixed;right:10px;top:calc(10px + env(safe-area-inset-top));z-index:70;display:none}
+body.zen{padding-bottom:0}
+body.zen .top{display:none}
+body.zen .savebar{display:none!important}
+body.zen main{padding:0}
+body.zen #v-table>.card{display:none}
+body.zen .tblwrap{max-height:none;height:100vh;border:0;border-radius:0}
+body.zen .zenx{display:block}
+@media (min-width:820px){.tblwrap{max-height:78vh}}
+@page{size:A4 landscape;margin:8mm}
+@media print{
+body{background:#fff;padding:0}
+.top,.savebar,.toast,#v-entry,#v-data,.zenx{display:none!important}
+#v-table{display:block!important}
+.tblwrap{overflow:visible;max-height:none;border:0}
+table{min-width:0;font-size:10px}
+thead th{position:static}
+td.cimg img,.noimg{width:40px;height:40px}
+.n{font-size:9px}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="row">
+    <div class="grow">
+      <div class="t">选品记录</div>
+      <div class="n" id="subline">共 0 条 · 只存在本机</div>
+    </div>
+    <button class="mini" id="btnZen" type="button">放大看表</button>
+  </div>
+  <div class="seg" id="seg">
+    <button type="button" data-v="entry" class="on">录入</button>
+    <button type="button" data-v="table">表格</button>
+    <button type="button" data-v="data">数据</button>
+  </div>
+</header>
+<button class="mini zenx" id="zenExit" type="button">退出放大</button>
+<main>
+<section id="v-entry">
+  <div class="card">
+    <h2>照片 <span class="hint">代替品名，现场拍一张就行</span></h2>
+    <div class="photo" id="photoBox">
+      <input type="file" accept="image/*" id="fileIn" class="hidden">
+      <div class="empty" id="phEmpty">
+        <div class="big">＋ 拍照 / 选图</div>
+        <div class="n">自动压到长边 1000px，一张约 150KB，省流量也省空间</div>
+      </div>
+      <img id="phImg" class="hidden" alt="">
+      <div class="phbtns hidden" id="phBtns">
+        <button type="button" class="mini" id="btnRepick">换图</button>
+        <button type="button" class="mini danger" id="btnDelPhoto">删除</button>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>在哪家 <span class="hint">分区 + 商位号 + 商家名</span></h2>
+    <div class="chips" id="zoneChips">
+      <button type="button" class="chip" data-z="一区1F">一区1F 玩具/仿真花</button>
+      <button type="button" class="chip" data-z="一区2F">一区2F 头饰/珠宝首饰</button>
+      <button type="button" class="chip" data-z="一区3F">一区3F 饰品配件/工艺品</button>
+      <button type="button" class="chip" data-z="四区2F">四区2F 家居收纳</button>
+      <button type="button" class="chip" data-z="四区3F">四区3F 家居用品</button>
+      <button type="button" class="chip" data-z="五区1F">五区1F 进口/其他</button>
+      <button type="button" class="chip" data-z="义博会">义博会 展位</button>
+    </div>
+    <label class="fld"><span>分区 / 楼层</span><input id="fZone" type="text" placeholder="如一区2F（也可点上面的按钮）" autocomplete="off"></label>
+    <label class="fld"><span>商位号</span><input id="fBooth" type="text" placeholder="如一区2F 3街 12345" autocomplete="off"></label>
+    <label class="fld"><span>商家名</span><input id="fVendor" type="text" placeholder="店招 / 名片上的名字" autocomplete="off"></label>
+    <label class="fld"><span>微信 / 电话</span><input id="fContact" type="text" placeholder="回酒店再补也行" autocomplete="off"></label>
+  </div>
+  <div class="card">
+    <h2>四维打分 <span class="hint">1 差 – 5 好，点数字就行；下面那行随手写一句</span></h2>
+    <div id="scoreWrap"></div>
+    <div class="total">
+      <div class="tnum"><span id="tNum">0</span><span class="tden">/20</span></div>
+      <div class="n grow" id="tHint">还没打分</div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>结论 <span class="hint">当场拿不准就先空着</span></h2>
+    <div class="verdict" id="verdictWrap">
+      <button type="button" data-v="试单" class="ok">试单</button>
+      <button type="button" data-v="观察" class="warn">观察</button>
+      <button type="button" data-v="放弃" class="bad">放弃</button>
+      <button type="button" data-v="" class="clear">清空</button>
+    </div>
+    <label class="fld"><span>备注（批发价 / 起订量 / 现货 / 代发 / 物流）</span><textarea id="fMemo" rows="2" placeholder="如：批发 12，5 件起，有现货可代发，快递 3.5 元"></textarea></label>
+  </div>
+  <div class="card">
+    <h2>刚记的 <span class="hint">点一下继续编辑</span></h2>
+    <div class="recent" id="recentList"><div class="n">还没有记录</div></div>
+  </div>
+</section>
+<section id="v-table" hidden>
+  <div class="card">
+    <div class="chips" id="filters">
+      <button type="button" class="chip on" data-f="all">全部</button>
+      <button type="button" class="chip" data-f="试单">试单</button>
+      <button type="button" class="chip" data-f="观察">观察</button>
+      <button type="button" class="chip" data-f="放弃">放弃</button>
+      <button type="button" class="chip" data-f="未定">未定</button>
+    </div>
+    <div class="row wrap">
+      <button type="button" class="mini" id="btnSort">排序：录入顺序</button>
+      <button type="button" class="mini" id="btnPrint">打印 / 存 PDF</button>
+      <span class="n">手机横过来看整张表；表格左右能滑</span>
+    </div>
+  </div>
+  <div class="tblwrap" id="tblWrap"><table id="tbl"></table></div>
+</section>
+<section id="v-data" hidden>
+  <div class="card"><h2>概览</h2><div class="stats" id="stats"></div></div>
+  <div class="card">
+    <h2>导出备份 <span class="hint">照片只在 JSON 里</span></h2>
+    <div class="row wrap">
+      <button type="button" class="mini pri" id="btnJson">导出 JSON（含照片）</button>
+      <button type="button" class="mini" id="btnCsv">导出 CSV（给 Excel）</button>
+      <button type="button" class="mini" id="btnCopy">复制 JSON</button>
+    </div>
+    <div class="n" style="margin-top:8px">JSON 是完整备份，换手机或换浏览器导入即可恢复。CSV 只有文字和分数，照片列标「有/无」。回来第一件事就是导一份 JSON 存微信收藏或网盘。</div>
+  </div>
+  <div class="card">
+    <h2>导入 / 恢复</h2>
+    <input type="file" id="impFile" accept=".json,application/json" class="hidden">
+    <button type="button" class="mini" id="btnImp">选择 JSON 文件导入</button>
+    <label class="row" style="margin-top:10px;align-items:flex-start"><input type="checkbox" id="impReplace" style="margin-top:3px"><span class="n">覆盖现有数据（不勾选 = 合并，同一条以导入的为准）</span></label>
+  </div>
+  <div class="card">
+    <h2>四维名称 <span class="hint">想改就改，改完点保存，全站同步</span></h2>
+    <div id="dimEdit"></div>
+    <button type="button" class="mini pri" id="btnSaveDims" style="margin-top:4px">保存维度名称</button>
+  </div>
+  <div class="card">
+    <h2>打分锚点与用法</h2>
+    <div class="n" id="ruleBox"></div>
+  </div>
+  <div class="card">
+    <h2>清空 <span class="hint">清空前先导 JSON</span></h2>
+    <button type="button" class="mini danger" id="btnClear">清空全部记录</button>
+  </div>
+</section>
+</main>
+<div class="savebar" id="savebar">
+  <button type="button" class="mini" id="btnReset">重填</button>
+  <button type="button" class="save" id="btnSave">保存这条</button>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+(function(){
+'use strict';
+var $=function(id){return document.getElementById(id);};
+var LS_DIMS='ywxp_dims_v1', LS_DRAFT='ywxp_draft_v1', LS_ROWS='ywxp_rows_v1';
+var Q=String.fromCharCode(34), NL=String.fromCharCode(10), CR=String.fromCharCode(13), BOM=String.fromCharCode(65279);
+var DIM_DEFAULT=[
+{name:'单利',hint:'单件利润空间：出厂价→档口价→1688价→零售端，中间还能留几层'},
+{name:'静音小物',hint:'赛道安静：需求稳定、竞争适中，大卖家看不上、搜索有量内容少'},
+{name:'治愈感',hint:'情绪价值：独居幸福感、收纳满足感、仪式感、用着安心'},
+{name:'内容种草力',hint:'视觉冲击 / 使用场景 / 演示性 / 话题空间'}
+];
+var S={dims:readDims(),rows:[],editId:null,ts:null,photo:null,scores:[0,0,0,0],notes:['','','',''],verdict:'',filter:'all',sortDesc:false,mode:'idb',draftTimer:null,toastTimer:null,touched:false};
+function esc(s){
+  if(s==null){return '';}
+  return String(s).split('&').join('&amp;').split('<').join('&lt;').split('>').join('&gt;').split(Q).join('&quot;');
+}
+function uid(){return 'r'+Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
+function sum(a){var n=0,i;for(i=0;i<4;i++){n+=(a&&a[i])||0;}return n;}
+function clampDims(a){var i,out=[];for(i=0;i<4;i++){var d=(a&&a[i])||{};out.push({name:String(d.name||DIM_DEFAULT[i].name),hint:String(d.hint||DIM_DEFAULT[i].hint)});}return out;}
+function readDims(){try{var x=JSON.parse(localStorage.getItem(LS_DIMS)||'null');if(x&&x.length){return clampDims(x);}}catch(e){}return clampDims(DIM_DEFAULT);}
+function writeDims(d){try{localStorage.setItem(LS_DIMS,JSON.stringify(d));}catch(e){}}
+function toast(m){var t=$('toast');t.textContent=m;t.className='toast on';clearTimeout(S.toastTimer);S.toastTimer=setTimeout(function(){t.className='toast';},1900);}
+function p2(n){return n<10?'0'+n:''+n;}
+function fmt(ts){if(!ts){return '';}var d=new Date(ts);return d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate())+' '+p2(d.getHours())+':'+p2(d.getMinutes());}
+function stamp(){var d=new Date();return ''+d.getFullYear()+p2(d.getMonth()+1)+p2(d.getDate())+'-'+p2(d.getHours())+p2(d.getMinutes());}
+function kb(dataUrl){var n=Math.round((String(dataUrl).length-22)*0.75/1024);return n>1024?(n/1024).toFixed(2)+'MB':n+'KB';}
+
+/* ---------- storage ---------- */
+function idbOpen(){return new Promise(function(res,rej){try{if(!window.indexedDB){throw new Error('no idb');}var q=indexedDB.open('ywxp_db',1);q.onupgradeneeded=function(){var db=q.result;if(!db.objectStoreNames.contains('rows')){db.createObjectStore('rows',{keyPath:'id'});}};q.onsuccess=function(){res(q.result);};q.onerror=function(){rej(q.error||new Error('idb error'));};}catch(e){rej(e);}});}
+function wrapReq(r){return new Promise(function(res,rej){r.onsuccess=function(){res(r.result);};r.onerror=function(){rej(r.error);};});}
+function store(mode){return idbOpen().then(function(db){return db.transaction('rows',mode).objectStore('rows');});}
+function dbPut(o){return store('readwrite').then(function(st){return wrapReq(st.put(o));});}
+function dbDel(id){return store('readwrite').then(function(st){return wrapReq(st.delete(id));});}
+function dbAll(){return store('readonly').then(function(st){return wrapReq(st.getAll());});}
+function dbClear(){return store('readwrite').then(function(st){return wrapReq(st.clear());});}
+function lsRows(){try{return JSON.parse(localStorage.getItem(LS_ROWS)||'[]');}catch(e){return [];}}
+function lsWrite(){try{localStorage.setItem(LS_ROWS,JSON.stringify(S.rows));}catch(e){toast('本机存储满了，先导出 JSON 备份');}}
+function persist(row){if(S.mode!=='idb'){lsWrite();return Promise.resolve();}return dbPut(row).catch(function(){S.mode='ls';lsWrite();});}
+function persistAll(){if(S.mode!=='idb'){lsWrite();return Promise.resolve();}return dbClear().then(function(){return Promise.all(S.rows.map(dbPut));}).catch(function(){S.mode='ls';lsWrite();});}
+function erase(id){if(S.mode!=='idb'){lsWrite();return Promise.resolve();}return dbDel(id).catch(function(){S.mode='ls';lsWrite();});}
+function normalize(r){
+  r=r||{};
+  r.id=r.id||uid();
+  r.ts=r.ts||Date.now();
+  r.scores=(r.scores&&r.scores.length===4)?r.scores.map(function(x){return +x||0;}):[0,0,0,0];
+  r.notes=(r.notes&&r.notes.length===4)?r.notes.map(function(x){return x==null?'':String(x);}):['','','',''];
+  r.total=(typeof r.total==='number')?r.total:sum(r.scores);
+  r.photo=r.photo||null;r.verdict=r.verdict||'';r.zone=r.zone||'';r.booth=r.booth||'';
+  r.vendor=r.vendor||'';r.contact=r.contact||'';r.memo=r.memo||'';
+  return r;
+}
+function initStore(){return idbOpen().then(function(){S.mode='idb';return dbAll();}).then(function(rows){S.rows=(rows||[]).map(normalize);}).catch(function(){S.mode='ls';S.rows=lsRows().map(normalize);});}
+function find(id){for(var i=0;i<S.rows.length;i++){if(S.rows[i].id===id){return S.rows[i];}}return null;}
+function sorted(){var a=S.rows.slice();a.sort(function(x,y){return x.ts-y.ts;});return a;}
+
+/* ---------- scores ---------- */
+function buildScoreRows(){
+  var h=[],i,v;
+  for(i=0;i<4;i++){
+    h.push('<div class="srow">');
+    h.push('<div class="slabel"><b>'+esc(S.dims[i].name)+'</b><span class="n">'+esc(S.dims[i].hint)+'</span></div>');
+    h.push('<div class="sbtns">');
+    for(v=1;v<=5;v++){h.push('<button type="button" class="sbtn d'+i+(S.scores[i]===v?' on':'')+'" data-d="'+i+'" data-v="'+v+'">'+v+'</button>');}
+    h.push('<button type="button" class="sbtn clr'+(S.scores[i]===0?' on':'')+'" data-d="'+i+'" data-v="0">—</button>');
+    h.push('</div>');
+    h.push('<input class="note" id="note'+i+'" type="text" placeholder="速记：如 视觉冲击强 / 单价 12 能卖 39.9" value="'+esc(S.notes[i])+'">');
+    h.push('</div>');
+  }
+  $('scoreWrap').innerHTML=h.join('');
+}
+function advise(n,c,min){
+  if(min<=2){return '有单项 ≤2 分，按规则先放「放弃」';}
+  if(c===4&&n>=16){return '≥16 分，够「试单」线';}
+  if(c===4&&n<12){return '总分偏低，倾向观察';}
+  return '';
+}
+function updTotal(){
+  var n=0,c=0,min=9,i;
+  for(i=0;i<4;i++){if(S.scores[i]>0){n+=S.scores[i];c++;if(S.scores[i]<min){min=S.scores[i];}}}
+  $('tNum').textContent=n;
+  var h='';
+  if(c===0){h='还没打分';}
+  else{h=c+' 项已评（可留空）';var s=advise(n,c,min);if(s){h=h+' · '+s;}}
+  $('tHint').textContent=h;
+}
+
+/* ---------- photo ---------- */
+function compress(file,maxEdge,q){
+  return new Promise(function(res,rej){
+    var url=URL.createObjectURL(file),img=new Image();
+    img.onload=function(){
+      try{
+        var w=img.naturalWidth||img.width,h=img.naturalHeight||img.height;
+        var s=Math.min(1,maxEdge/Math.max(w,h));
+        var cw=Math.max(1,Math.round(w*s)),ch=Math.max(1,Math.round(h*s));
+        var c=document.createElement('canvas');c.width=cw;c.height=ch;
+        var ctx=c.getContext('2d');
+        ctx.fillStyle='#fff';ctx.fillRect(0,0,cw,ch);
+        ctx.drawImage(img,0,0,cw,ch);
+        var d=c.toDataURL('image/jpeg',q);
+        URL.revokeObjectURL(url);
+        res({data:d,w:cw,h:ch});
+      }catch(e){URL.revokeObjectURL(url);rej(e);}
+    };
+    img.onerror=function(){URL.revokeObjectURL(url);rej(new Error('read fail'));};
+    img.src=url;
+  });
+}
+function showPhoto(){
+  var has=!!S.photo;
+  $('phImg').className=has?'':'hidden';
+  $('phBtns').className=has?'phbtns':'phbtns hidden';
+  $('phEmpty').className=has?'empty hidden':'empty';
+  if(has){$('phImg').src=S.photo;}
+}
+
+/* ---------- form ---------- */
+function collect(){
+  return {id:S.editId||uid(),ts:S.ts||Date.now(),upd:Date.now(),photo:S.photo,
+    zone:$('fZone').value.trim(),booth:$('fBooth').value.trim(),vendor:$('fVendor').value.trim(),
+    contact:$('fContact').value.trim(),scores:S.scores.slice(),notes:S.notes.slice(),
+    verdict:S.verdict,memo:$('fMemo').value.trim(),total:sum(S.scores)};
+}
+function paintVerdict(){
+  var b=$('verdictWrap').querySelectorAll('button'),i;
+  for(i=0;i<b.length;i++){
+    var v=b[i].getAttribute('data-v')||'';
+    b[i].className=b[i].className.split(' on').join('')+(v===S.verdict?' on':'');
+  }
+}
+function fill(r){
+  S.editId=r.id;S.ts=r.ts;S.photo=r.photo||null;
+  S.scores=(r.scores||[0,0,0,0]).slice();S.notes=(r.notes||['','','','']).slice();S.verdict=r.verdict||'';
+  $('fZone').value=r.zone||'';$('fBooth').value=r.booth||'';$('fVendor').value=r.vendor||'';
+  $('fContact').value=r.contact||'';$('fMemo').value=r.memo||'';
+  buildScoreRows();showPhoto();updTotal();paintVerdict();
+  $('btnSave').textContent=S.editId?'保存修改':'保存这条';
+}
+function resetForm(){
+  $('fZone').value='';$('fBooth').value='';$('fVendor').value='';$('fContact').value='';$('fMemo').value='';
+  S.editId=null;S.ts=null;S.photo=null;S.scores=[0,0,0,0];S.notes=['','','',''];S.verdict='';
+  buildScoreRows();showPhoto();updTotal();paintVerdict();
+  $('btnSave').textContent='保存这条';
+  try{localStorage.removeItem(LS_DRAFT);}catch(e){}
+}
+function isBlank(d){return !d.photo&&!d.zone&&!d.booth&&!d.vendor&&!d.contact&&!d.memo&&sum(d.scores)===0;}
+function saveRow(){
+  var d=collect(),old=find(d.id),i;
+  if(isBlank(d)){toast('这条还是空的：先拍张照，或填个商位号');return;}
+  if(old){
+    d.ts=old.ts;
+    for(i=0;i<S.rows.length;i++){if(S.rows[i].id===d.id){S.rows[i]=d;}}
+  }else{
+    S.rows.push(d);
+  }
+  persist(d).then(function(){
+    try{localStorage.removeItem(LS_DRAFT);}catch(e){}
+    render();resetForm();
+    toast(old?'已更新（共 '+S.rows.length+' 条）':'已保存第 '+S.rows.length+' 条');
+    window.scrollTo(0,0);
+  });
+}
+function saveDraft(){
+  S.touched=true;
+  clearTimeout(S.draftTimer);
+  S.draftTimer=setTimeout(function(){
+    try{
+      var d=collect();
+      if(isBlank(d)){localStorage.removeItem(LS_DRAFT);return;}
+      localStorage.setItem(LS_DRAFT,JSON.stringify(d));
+    }catch(e){}
+  },600);
+}
+function restoreDraft(raw){
+  if(S.touched){return;}
+  try{
+    if(!raw){return;}
+    var d=JSON.parse(raw);
+    if(!d||isBlank(d)){return;}
+    fill(normalize(d));
+    S.editId=find(d.id)?d.id:null;
+    toast('已恢复上次没保存的那条');
+  }catch(e){}
+}
+
+/* ---------- render ---------- */
+function render(){
+  var n=S.rows.length,vt=0,vo=0,vf=0,vn=0,i;
+  for(i=0;i<n;i++){var v=S.rows[i].verdict;if(v==='试单'){vt++;}else if(v==='观察'){vo++;}else if(v==='放弃'){vf++;}else{vn++;}}
+  $('subline').textContent='共 '+n+' 条 · 试单 '+vt+' / 观察 '+vo+' / 放弃 '+vf+' / 未定 '+vn+' · 只存在本机';
+  renderRecent();renderTable();renderData();
+}
+function renderRecent(){
+  var a=sorted().reverse().slice(0,8),h=[],i;
+  if(!a.length){$('recentList').innerHTML='<div class="n">还没有记录</div>';return;}
+  for(i=0;i<a.length;i++){
+    var r=a[i];
+    h.push('<div class="rc" data-id="'+r.id+'">');
+    if(r.photo){h.push('<img src="'+r.photo+'" alt="">');}
+    else{h.push('<div class="noimg" style="width:100%;height:76px;border-radius:0">无图</div>');}
+    h.push('<button type="button" class="x" data-del="'+r.id+'">×</button>');
+    h.push('<div class="rcb"><b>'+esc(r.booth||r.vendor||r.zone||'未填')+'</b><span class="n">'+(r.total||0)+' 分'+(r.verdict?' · '+esc(r.verdict):'')+'</span></div>');
+    h.push('</div>');
+  }
+  $('recentList').innerHTML=h.join('');
+}
+function renderTable(){
+  var a=sorted(),i,j;
+  if(S.filter!=='all'){a=a.filter(function(r){return (r.verdict||'未定')===S.filter;});}
+  if(S.sortDesc){a.sort(function(x,y){return (y.total||0)-(x.total||0)||(y.ts-x.ts);});}
+  var h=['<thead><tr><th class="c0">#</th><th>照片</th><th>分区/楼层</th><th>商位号</th><th>商家名</th><th>微信/电话</th>'];
+  for(i=0;i<4;i++){h.push('<th>'+esc(S.dims[i].name)+'</th>');}
+  h.push('<th>总分</th><th>结论</th><th>备注</th></tr></thead><tbody>');
+  if(!a.length){h.push('<tr><td class="empty" colspan="13">还没有记录。切到「录入」拍第一张。</td></tr>');}
+  for(i=0;i<a.length;i++){
+    var r=a[i];
+    h.push('<tr data-id="'+r.id+'">');
+    h.push('<td class="c0">'+(i+1)+'</td>');
+    if(r.photo){h.push('<td class="cimg"><img src="'+r.photo+'" alt=""></td>');}
+    else{h.push('<td class="cimg"><div class="noimg">无图</div></td>');}
+    h.push('<td>'+esc(r.zone)+'</td><td>'+esc(r.booth)+'</td><td>'+esc(r.vendor)+'</td><td>'+esc(r.contact)+'</td>');
+    for(j=0;j<4;j++){
+      var sc=r.scores[j]||0,nt=r.notes[j]||'';
+      h.push('<td class="sc dim'+j+'"><b>'+(sc||'-')+'</b>'+(nt?'<span class="nt">'+esc(nt)+'</span>':'')+'</td>');
+    }
+    h.push('<td class="tot">'+(r.total||0)+'</td>');
+    if(r.verdict){
+      h.push('<td class="vd"><span class="tag '+(r.verdict==='试单'?'v1':(r.verdict==='观察'?'v2':'v3'))+'">'+esc(r.verdict)+'</span></td>');
+    }else{
+      h.push('<td class="vd"><span class="n">未定</span></td>');
+    }
+    h.push('<td class="memo">'+esc(r.memo)+'</td>');
+    h.push('</tr>');
+  }
+  h.push('</tbody>');
+  $('tbl').innerHTML=h.join('');
+}
+function st(v,l){return '<div class="st"><b>'+esc(v)+'</b><span class="n">'+esc(l)+'</span></div>';}
+function renderData(){
+  var n=S.rows.length,t=0,vt=0,vo=0,vf=0,vn=0,bytes=0,i;
+  for(i=0;i<n;i++){
+    var r=S.rows[i];t+=(r.total||0);
+    var v=r.verdict;
+    if(v==='试单'){vt++;}else if(v==='观察'){vo++;}else if(v==='放弃'){vf++;}else{vn++;}
+    bytes+=(r.photo?String(r.photo).length:0)+220;
+  }
+  var avg=n?(t/n).toFixed(1):'0';
+  $('stats').innerHTML=st(n,'条记录')+st(avg,'平均总分（满分 20）')+st(vt+' / '+vo,'试单 / 观察')+st(vf+' / '+vn,'放弃 / 未定')+st((bytes/1048576).toFixed(2)+'MB','估算占用')+st(S.mode==='idb'?'本机数据库':'浏览器缓存','存储位置');
+  var h=[],k;
+  for(k=0;k<4;k++){
+    h.push('<div class="dime"><input data-k="n'+k+'" type="text" value="'+esc(S.dims[k].name)+'" placeholder="维度'+(k+1)+'名称"><input data-k="h'+k+'" type="text" value="'+esc(S.dims[k].hint)+'" placeholder="提示语"></div>');
+  }
+  $('dimEdit').innerHTML=h.join('');
+  $('ruleBox').innerHTML=[
+    '<b>5 分＝一眼就想要</b>：能立刻说出它的卖点、能想出 3 条笔记标题；',
+    '<b>3 分＝还行</b>：想得到卖点但要费劲包装；',
+    '<b>1 分＝凑数</b>：自己都不想点开看。',
+    '<br><br><b>否决线</b>：任意一维 ≤2 分，直接在结论里放「放弃」，不用纠结总分。',
+    '<br><b>试单线</b>：四维都打满、总分 ≥16/20，才算够格试单。',
+    '<br><b>拍照顺序</b>：先拍货 → 再拍价签或报价单 → 最后拍名片或微信二维码；商位号一定当场填，回头基本想不起来。',
+    '<br><b>录入节奏</b>：一次只填一条，填完立刻保存；被打断没事，没保存的内容会自动存草稿。'
+  ].join('');
+}
+
+/* ---------- export / import ---------- */
+function download(name,text,mime){
+  try{
+    var blob=new Blob([text],{type:mime||'text/plain;charset=utf-8'});
+    var url=URL.createObjectURL(blob),a=document.createElement('a');
+    a.href=url;a.download=name;document.body.appendChild(a);a.click();
+    setTimeout(function(){URL.revokeObjectURL(url);if(a.parentNode){a.parentNode.removeChild(a);}},1500);
+    toast('已导出 '+name);
+  }catch(e){toast('导出失败：'+(e&&e.message?e.message:'未知错误'));}
+}
+function csvCell(s){
+  s=(s==null?'':String(s));
+  if(s.indexOf(Q)>=0||s.indexOf(',')>=0||s.indexOf(NL)>=0||s.indexOf(CR)>=0){s=Q+s.split(Q).join(Q+Q)+Q;}
+  return s;
+}
+function pack(){return {app:'ywxp-xuanpin',v:1,exportedAt:new Date().toISOString(),dims:S.dims,rows:sorted()};}
+function exportJson(){download('xuanpin-'+stamp()+'.json',JSON.stringify(pack()),'application/json');}
+function exportCsv(){
+  var head=['编号','分区/楼层','商位号','商家名','微信/电话'],i,j;
+  for(i=0;i<4;i++){head.push(S.dims[i].name+'(1-5)');head.push(S.dims[i].name+'-速记');}
+  head=head.concat(['总分(满分20)','结论','备注','录入时间','照片']);
+  var lines=[head.map(csvCell).join(',')],a=sorted();
+  for(i=0;i<a.length;i++){
+    var r=a[i],row=[i+1,r.zone,r.booth,r.vendor,r.contact];
+    for(j=0;j<4;j++){row.push(r.scores[j]||'');row.push(r.notes[j]||'');}
+    row=row.concat([r.total||'',r.verdict||'',r.memo||'',fmt(r.ts),r.photo?'有':'无']);
+    lines.push(row.map(csvCell).join(','));
+  }
+  download('xuanpin-'+stamp()+'.csv',BOM+lines.join(CR+NL),'text/csv;charset=utf-8');
+}
+function fallbackCopy(txt){
+  var ta=document.createElement('textarea');ta.value=txt;ta.style.position='fixed';ta.style.left='-9999px';
+  document.body.appendChild(ta);ta.select();
+  try{document.execCommand('copy');toast('已复制 JSON');}catch(e){toast('复制失败，改用「导出 JSON」');}
+  document.body.removeChild(ta);
+}
+function copyJson(){
+  var txt=JSON.stringify(pack());
+  try{
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(function(){toast('已复制 JSON 到剪贴板');},function(){fallbackCopy(txt);});
+    }else{fallbackCopy(txt);}
+  }catch(e){fallbackCopy(txt);}
+}
+function applyImport(rows,replace){
+  var i,clean=[];
+  for(i=0;i<rows.length;i++){clean.push(normalize(rows[i]));}
+  if(replace){S.rows=clean;}
+  else{
+    var map={},k;
+    for(i=0;i<S.rows.length;i++){map[S.rows[i].id]=S.rows[i];}
+    for(i=0;i<clean.length;i++){map[clean[i].id]=clean[i];}
+    S.rows=[];
+    for(k in map){if(Object.prototype.hasOwnProperty.call(map,k)){S.rows.push(map[k]);}}
+  }
+  persistAll().then(function(){render();toast('导入完成，现有 '+S.rows.length+' 条');});
+}
+
+/* ---------- view ---------- */
+function setView(v){
+  var ks=['entry','table','data'],i;
+  for(i=0;i<ks.length;i++){$('v-'+ks[i]).hidden=(ks[i]!==v);}
+  var bs=$('seg').querySelectorAll('button');
+  for(i=0;i<bs.length;i++){bs[i].className=(bs[i].getAttribute('data-v')===v)?'on':'';}
+  $('savebar').style.display=(v==='entry')?'flex':'none';
+  if(v==='table'){renderTable();}
+  if(v==='data'){renderData();}
+  window.scrollTo(0,0);
+}
+
+/* ---------- events ---------- */
+$('seg').addEventListener('click',function(e){var b=e.target.closest('button[data-v]');if(!b){return;}setView(b.getAttribute('data-v'));});
+$('zoneChips').addEventListener('click',function(e){
+  var b=e.target.closest('button[data-z]');if(!b){return;}
+  $('fZone').value=b.getAttribute('data-z');
+  var cs=$('zoneChips').querySelectorAll('.chip'),i;
+  for(i=0;i<cs.length;i++){cs[i].className=(cs[i]===b)?'chip on':'chip';}
+  saveDraft();
+});
+$('scoreWrap').addEventListener('click',function(e){
+  var b=e.target.closest('button.sbtn');if(!b){return;}
+  var d=+b.getAttribute('data-d'),v=+b.getAttribute('data-v'),i;
+  S.scores[d]=v;
+  var sibs=$('scoreWrap').querySelectorAll('.sbtn[data-d="'+d+'"]');
+  for(i=0;i<sibs.length;i++){sibs[i].className=sibs[i].className.split(' on').join('');}
+  b.className=b.className+' on';
+  updTotal();saveDraft();
+});
+$('scoreWrap').addEventListener('input',function(e){
+  var n=e.target;if(n.className!=='note'){return;}
+  var d=+n.id.split('note').join('');S.notes[d]=n.value;saveDraft();
+});
+$('verdictWrap').addEventListener('click',function(e){
+  var b=e.target.closest('button');if(!b){return;}
+  S.verdict=b.getAttribute('data-v')||'';paintVerdict();saveDraft();
+});
+['fZone','fBooth','fVendor','fContact','fMemo'].forEach(function(id){$(id).addEventListener('input',saveDraft);});
+$('photoBox').addEventListener('click',function(e){if(e.target.closest('.mini')){return;}$('fileIn').click();});
+$('fileIn').addEventListener('change',function(){
+  var f=this.files&&this.files[0];this.value='';
+  if(!f){return;}
+  toast('正在压缩照片…');
+  compress(f,1000,0.72).then(function(r){
+    S.photo=r.data;showPhoto();saveDraft();
+    toast('照片已压缩：'+r.w+'×'+r.h+' · '+kb(r.data));
+  },function(){toast('这张图读不出来，换一张试试');});
+});
+$('btnRepick').addEventListener('click',function(e){e.stopPropagation();$('fileIn').click();});
+$('btnDelPhoto').addEventListener('click',function(e){e.stopPropagation();S.photo=null;showPhoto();saveDraft();});
+$('btnSave').addEventListener('click',saveRow);
+$('btnReset').addEventListener('click',function(){if(confirm('清空正在填的这条？已保存的记录不受影响。')){resetForm();toast('已清空，可以重新填');}});
+$('recentList').addEventListener('click',function(e){
+  var x=e.target.closest('button[data-del]'),i;
+  if(x){
+    var id=x.getAttribute('data-del');
+    if(confirm('删掉这条记录？')){
+      S.rows=S.rows.filter(function(r){return r.id!==id;});
+      erase(id).then(function(){render();toast('已删除');});
+    }
+    return;
+  }
+  var c=e.target.closest('.rc');if(!c){return;}
+  var r=find(c.getAttribute('data-id'));if(!r){return;}
+  fill(r);setView('entry');toast('正在编辑这条，改完点保存');
+});
+$('tbl').addEventListener('click',function(e){
+  var tr=e.target.closest('tr[data-id]');if(!tr){return;}
+  var r=find(tr.getAttribute('data-id'));if(!r){return;}
+  fill(r);setView('entry');toast('正在编辑这条，改完点保存');
+});
+$('filters').addEventListener('click',function(e){
+  var b=e.target.closest('button[data-f]');if(!b){return;}
+  S.filter=b.getAttribute('data-f');
+  var cs=$('filters').querySelectorAll('.chip'),i;
+  for(i=0;i<cs.length;i++){cs[i].className=(cs[i]===b)?'chip on':'chip';}
+  renderTable();
+});
+$('btnSort').addEventListener('click',function(){S.sortDesc=!S.sortDesc;this.textContent=S.sortDesc?'排序：总分从高到低':'排序：录入顺序';renderTable();});
+$('btnPrint').addEventListener('click',function(){window.print();});
+$('btnJson').addEventListener('click',exportJson);
+$('btnCsv').addEventListener('click',exportCsv);
+$('btnCopy').addEventListener('click',copyJson);
+$('btnImp').addEventListener('click',function(){$('impFile').click();});
+$('impFile').addEventListener('change',function(){
+  var f=this.files&&this.files[0];this.value='';
+  if(!f){return;}
+  var fr=new FileReader();
+  fr.onload=function(){
+    try{
+      var d=JSON.parse(fr.result);
+      var rows=(Object.prototype.toString.call(d)==='[object Array]')?d:(d.rows||[]);
+      if(!rows.length){throw new Error('文件里没有记录');}
+      var rep=$('impReplace').checked;
+      if(rep&&!confirm('覆盖现有 '+S.rows.length+' 条记录？')){return;}
+      applyImport(rows,rep);
+    }catch(e){toast('导入失败：'+(e&&e.message?e.message:'格式不对'));}
+  };
+  fr.onerror=function(){toast('文件读取失败');};
+  fr.readAsText(f,'utf-8');
+});
+$('btnSaveDims').addEventListener('click',function(){
+  var ins=$('dimEdit').querySelectorAll('input'),nd=[],i;
+  for(i=0;i<4;i++){nd.push({name:'',hint:''});}
+  for(i=0;i<ins.length;i++){
+    var k=ins[i].getAttribute('data-k'),idx=+k.slice(1),field=(k.charAt(0)==='n')?'name':'hint';
+    nd[idx][field]=ins[i].value.trim()||DIM_DEFAULT[idx][field];
+  }
+  S.dims=clampDims(nd);writeDims(S.dims);buildScoreRows();render();toast('维度名称已更新');
+});
+$('btnClear').addEventListener('click',function(){
+  if(!S.rows.length){toast('本来就是空的');return;}
+  if(!confirm('要清空全部 '+S.rows.length+' 条记录？建议先导出 JSON。')){return;}
+  if(!confirm('再确认一次：清空后本机数据无法恢复。')){return;}
+  S.rows=[];
+  var done=function(){render();resetForm();toast('已全部清空');};
+  if(S.mode!=='idb'){lsWrite();done();}
+  else{dbClear().then(done,function(){lsWrite();done();});}
+});
+$('btnZen').addEventListener('click',function(){setView('table');document.body.className='zen';toast('横过来看更全，右上角退出');});
+$('zenExit').addEventListener('click',function(){document.body.className='';});
+
+/* ---------- boot ---------- */
+buildScoreRows();updTotal();paintVerdict();showPhoto();
+var draftRaw=null;
+try{draftRaw=localStorage.getItem(LS_DRAFT);}catch(e){}
+initStore().then(function(){render();restoreDraft(draftRaw);},function(){render();restoreDraft(draftRaw);});
+window.addEventListener('beforeunload',function(){
+  try{
+    var d=collect();
+    if(!isBlank(d)){localStorage.setItem(LS_DRAFT,JSON.stringify(d));}
+  }catch(e){}
+});
+})();
+</script>
+</body>
+</html>
