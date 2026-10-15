@@ -18,3 +18,12 @@ node_modules/
 __pycache__/
 .venv/
 *.log
+
+# 个人行程 / 现场资料：不进仓库（本仓库已公开）
+义乌行前工具包/
+
+# 临时排查脚本
+_*.ps1
+probe*.ps1
+rd.ps1
+wx.ps1
