@@ -714,6 +714,12 @@ buildScoreRows();updTotal();paintVerdict();showPhoto();
 var draftRaw=null;
 try{draftRaw=localStorage.getItem(LS_DRAFT);}catch(e){}
 initStore().then(function(){render();restoreDraft(draftRaw);},function(){render();restoreDraft(draftRaw);});
+if(navigator.serviceWorker){
+  navigator.serviceWorker.register('sw.js').then(function(){
+    if(navigator.serviceWorker.controller){return;}
+    navigator.serviceWorker.addEventListener('controllerchange',function(){toast('离线缓存已就绪');});
+  },function(){});
+}
 window.addEventListener('beforeunload',function(){
   try{
     var d=collect();
