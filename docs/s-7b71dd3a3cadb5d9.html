@@ -259,13 +259,13 @@ td.cimg img,.noimg{width:40px;height:40px}
 (function(){
 'use strict';
 var $=function(id){return document.getElementById(id);};
-var LS_DIMS='ywxp_dims_v1', LS_DRAFT='ywxp_draft_v1', LS_ROWS='ywxp_rows_v1';
+var LS_DIMS='ywxp_dims_v3', LS_DRAFT='ywxp_draft_v1', LS_ROWS='ywxp_rows_v1';
 var Q=String.fromCharCode(34), NL=String.fromCharCode(10), CR=String.fromCharCode(13), BOM=String.fromCharCode(65279);
 var DIM_DEFAULT=[
-{name:'单利',hint:'单件利润空间：出厂价→档口价→1688价→零售端，中间还能留几层'},
-{name:'静音小物',hint:'赛道安静：需求稳定、竞争适中，大卖家看不上、搜索有量内容少'},
-{name:'治愈感',hint:'情绪价值：独居幸福感、收纳满足感、仪式感、用着安心'},
-{name:'内容种草力',hint:'视觉冲击 / 使用场景 / 演示性 / 话题空间'}
+{name:'价格感知',hint:'出厂价→档口价→1688价→零售价：加价几层、终端能卖多少、心里先有个价格锚'},
+{name:'需求与竞争',hint:'需求大小 × 竞争激烈：需求稳定、竞争适中、大卖家看不上，才是新手切入点'},
+{name:'可加工空间',hint:'四改法：改包装、改组合、改场景、改颜色尺寸（小批量定制）'},
+{name:'内容种草力',hint:'视觉感官、情绪共鸣、话题空间'}
 ];
 var S={dims:readDims(),rows:[],editId:null,ts:null,photo:null,scores:[0,0,0,0],notes:['','','',''],verdict:'',filter:'all',sortDesc:false,mode:'idb',draftTimer:null,toastTimer:null,touched:false};
 function esc(s){
@@ -321,7 +321,7 @@ function buildScoreRows(){
     for(v=1;v<=5;v++){h.push('<button type="button" class="sbtn d'+i+(S.scores[i]===v?' on':'')+'" data-d="'+i+'" data-v="'+v+'">'+v+'</button>');}
     h.push('<button type="button" class="sbtn clr'+(S.scores[i]===0?' on':'')+'" data-d="'+i+'" data-v="0">—</button>');
     h.push('</div>');
-    h.push('<input class="note" id="note'+i+'" type="text" placeholder="速记：如 视觉冲击强 / 单价 12 能卖 39.9" value="'+esc(S.notes[i])+'">');
+    h.push('<input class="note" id="note'+i+'" type="text" placeholder="速记：如 视觉能出片 / 单价 12 能卖 39.9" value="'+esc(S.notes[i])+'">');
     h.push('</div>');
   }
   $('scoreWrap').innerHTML=h.join('');
@@ -510,6 +510,10 @@ function renderData(){
   }
   $('dimEdit').innerHTML=h.join('');
   $('ruleBox').innerHTML=[
+    '<b>① 价格感知</b>：5 分＝摸清两层以上价格链（出厂价→档口价→1688价→零售价）、终端价÷拿货价 ≥3 倍；3 分＝有差价但一般（约 2 倍）或价格链没摸全；1 分＝说不清价格链。<br>',
+    '<b>② 需求与竞争</b>（需求 × 竞争）：5 分＝需求常年稳定、搜索前 3 页多是中小卖家、详情页糙、大卖家看不上；3 分＝有需求但竞争明显；1 分＝红海爆款或需求说不清。<br>',
+    '<b>③ 可加工空间</b>：四改法＝改包装、改组合、改场景、改颜色尺寸（小批量定制）；能用上 ≥3 种＝5 分，1-2 种＝3 分，一种都用不上＝只能拼价格。<br>',
+    '<b>④ 内容种草力</b>：视觉感官、情绪共鸣、话题空间；三样都占＝5 分，占 1-2 样＝3 分，平平无奇、纯功能、说不出口＝1 分。<br>',
     '<b>5 分＝一眼就想要</b>：能立刻说出它的卖点、能想出 3 条笔记标题；',
     '<b>3 分＝还行</b>：想得到卖点但要费劲包装；',
     '<b>1 分＝凑数</b>：自己都不想点开看。',
